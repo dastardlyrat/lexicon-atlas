@@ -88,6 +88,8 @@ The shell is a scaffold, not a packaged installer.
 - Lexical analysis does not create an axiom, grant command authority, or execute a command.
 - Optional AI support is inert unless a caller explicitly supplies `window.lexiconAtlasAI`; its output remains generated draft text.
 
-## Project license status
+## License
 
-No project-wide software license has been selected yet. Public visibility on GitHub does not by itself grant permission to reuse the code. Third-party source data is excluded and retains its own licensing requirements.
+The original code, documentation, and published project assets in this repository are licensed under the [MIT License](LICENSE), copyright 2026 `dastardlyrat`.
+
+The MIT License does **not** relicense external dictionaries, lexical databases, generated records derived from them, or third-party dependencies. Those materials are excluded from this repository and retain their own licenses and attribution requirements. See [`dist/resources.html`](dist/resources.html) for the source-by-source ledger.
