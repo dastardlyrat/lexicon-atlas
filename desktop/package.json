@@ -1,0 +1,13 @@
+{
+  "name": "lexicon-atlas-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone offline shell for Lexicon Atlas",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "35.7.5"
+  }
+}

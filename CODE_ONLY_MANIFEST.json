@@ -1,0 +1,35 @@
+{
+  "schema": "lexicon-atlas-code-publication/1",
+  "status": "generated-and-validated",
+  "publication_date": "2026-11-07",
+  "source": {
+    "kind": "Lexicon Atlas Sites source snapshot",
+    "commit": "363a2a002e2d4cb71fdba1b2f8a2b223866a1292",
+    "live_url": "https://lexicon-atlas-oewn.dastardly-rat.chatgpt.site/"
+  },
+  "scope": {
+    "included": [
+      "static interface",
+      "heuristic synthesis module",
+      "local data builders and format adapters",
+      "desktop development shell",
+      "documentation and project notes",
+      "about-page artwork"
+    ],
+    "excluded": [
+      "dictionary source files",
+      "WordNet databases",
+      "generated lexical shards and indexes",
+      "downloaded archives",
+      "automatic source downloader",
+      "dependency and build caches",
+      "Sites internal project metadata"
+    ]
+  },
+  "validation": {
+    "guard": "python -B verify_code_only.py",
+    "javascript_syntax": "passed",
+    "python_syntax": "passed",
+    "external_data_tracked": false
+  }
+}

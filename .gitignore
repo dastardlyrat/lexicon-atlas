@@ -1,0 +1,31 @@
+# Lexical source material and generated dictionary indexes are deliberately external.
+.lexical_sources/
+vendor/
+build-output/
+.wn_data/
+dist/data/*
+!dist/data/.gitkeep
+!dist/data/README.md
+
+# Dictionary and database formats must not enter this code-only repository.
+*.db
+*.sqlite
+*.sqlite3
+*.dict
+*.idx
+*.ifo
+*.odict
+*.odxml
+*.jsonl
+*.json.gz
+*.tar
+*.tar.gz
+*.tar.xz
+
+# Dependencies, caches, and local tooling state.
+node_modules/
+__pycache__/
+*.pyc
+.openai/
+.env
+.env.*

@@ -1,0 +1,39 @@
+# Lexicon Atlas todo
+
+- [x] Place view navigation in an explicit responsive header grid and render bounded two-line graph labels.
+- [x] Replace relation graph circles with label-sized rounded information boxes.
+- [x] Add a near-full-screen relation graph explorer with synchronized relation and depth controls.
+- [x] Set the reproducible showcase entry state to code, Hyponym, and depth 5.
+- [x] Add the supplied Philippe Stuart artwork as an opening fade and linked About card.
+- [x] Add a Full word tab beside the recursive sense graph.
+- [x] Attach complete pinned CMUdict pronunciation data.
+- [x] Attach complete pinned UniMorph English inflection and derivation data.
+- [x] Attach pinned General American and Received Pronunciation IPA files.
+- [x] Download and import GCIDE 0.54 into source-separated browser shards.
+- [x] Add a generic StarDict reader for text and binary fields, 32-bit and 64-bit offsets, and compressed dictionary data.
+- [x] Add ODict ODXML export with per-shard hashes and XML validation.
+- [x] Keep live Wiktionary as a visible fallback rather than silently replacing local evidence.
+- [x] Download the complete 3,335,555,506-byte English Wiktionary extraction and verify its SHA-256.
+- [x] Import every valid English Wiktionary row into local source-separated browser shards.
+- [x] Validate the final Wiktionary counts, shard JSON, representative words, and ODXML export.
+- [x] Rebuild and deploy the private Lexicon Atlas site after the full local import passes.
+- [x] Add a source-aware synthesis pane with heuristic ranking, context reranking, and an optional AI provider hook.
+- [x] Add the first standalone offline desktop shell scaffold.
+- [x] Extract the deterministic synthesis engine into a browser module.
+- [x] Publish an active-resource and license ledger linked from every Atlas view.
+- [x] Create the separate Lexicon Core package and shared dictionary registry.
+- [x] Add modular collision, morphology, relation, intent, and pipeline scaffolds to Lexicon Core.
+- [x] Add task adapters for dictionary, file explorer, expert control, and deterministic ELIZA NXT.
+- [ ] Add task-specific acceptance schemas and adapters for the sister parser.
+  - [x] Scaffold the advisory catalog adapter profile `catalog.modular-nlp-capability-handoff/0.1` in Lexicon Core.
+  - [x] Add exact-source, collision, constraint, provenance, layer-trace, registry-gating, and abstention tests.
+  - [x] Validate the generated output schema and seven acceptance envelopes with `jsonschema` 4.26.0 Draft 2020-12 validation.
+  - [x] Add registry-supplied typed argument contracts and forged-candidate rejection.
+  - [x] Add a Draft 2020-12 registry-input schema.
+  - [x] Bridge generic file-explorer search and list proposals into the catalog profile.
+  - [x] Add a partial parse that retains a valid candidate and an explicit unresolved clause.
+  - [ ] Receive catalog acceptance or corrections and record the resulting canonical contract version.
+- [ ] Extract browser data stores from the application controller.
+- [ ] Extract view renderers and proposal boundary contracts.
+- [ ] Add the desktop offline policy, packaged data manifest, and reproducible installer build.
+- [ ] Add audio only after choosing a reproducible open audio corpus and retaining license metadata per file.
