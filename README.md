@@ -10,6 +10,8 @@ Lexicon Atlas is part of our developing work on **natural language processing (N
 
 *Artwork by phillipe stuart.*
 
+This two-dimensional ink image is a transmigration of a historical artifact. Simulated three-dimensional rendering gives the ink image life and depth, carrying the drawing into a new visual form.
+
 ## Repository boundary
 
 This is a **code-only repository**. It contains the interface, data builders, import/export adapters, desktop scaffold, project notes, and artwork. It does not contain dictionaries, WordNet databases, downloaded archives, generated lexical shards, or an automatic data downloader.
