@@ -6,6 +6,10 @@ Lexicon Atlas is a source-aware graphical explorer for words, senses, definition
 
 Lexicon Atlas is part of our developing work on **natural language processing (NLP)**. See [xOSG Prototype](https://github.com/alia-june/xOSG-prototype) for the broader technology. An upcoming project will grow a **dictionary from a seed drawn from classical sources**, keeping each source’s provenance visible as the dictionary develops.
 
+![Illustration of a figure beside a circular geometric motif](assets/phillipe-stuart-artwork.jpg)
+
+*Artwork by phillipe stuart.*
+
 ## Repository boundary
 
 This is a **code-only repository**. It contains the interface, data builders, import/export adapters, desktop scaffold, project notes, and artwork. It does not contain dictionaries, WordNet databases, downloaded archives, generated lexical shards, or an automatic data downloader.
