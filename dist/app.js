@@ -18,6 +18,8 @@ const state = {
   relationType: null,
   relationTargets: [],
   graphDepth: 5,
+  graphDirection: "forward",
+  graphFocusKey: null,
   graphTraversal: null,
   graphRequest: 0,
   cache: new Map(),
@@ -28,12 +30,15 @@ const $ = (id) => document.getElementById(id);
 const searchInput = $("word-search");
 const suggestions = $("suggestions");
 const posNames = { n: "noun", v: "verb", a: "adjective", s: "adjective satellite", r: "adverb" };
+const MAX_GRAPH_DEPTH = 5;
 const GRAPH_NODES_PER_LEVEL = 20;
 const GRAPH_TOTAL_NODE_LIMIT = 100;
 const graphSvgs = () => [$("relation-graph"), $("relation-graph-expanded")].filter(Boolean);
 const graphStatuses = () => [$("graph-status"), $("graph-dialog-status")].filter(Boolean);
 const relationTabContainers = () => [$("relation-tabs"), $("graph-dialog-relation-tabs")].filter(Boolean);
 const depthControls = () => [...document.querySelectorAll("[data-graph-depth]")];
+const directionControls = () => [...document.querySelectorAll("[data-graph-direction]")];
+const graphFocusPanels = () => [...document.querySelectorAll("[data-graph-focus]")];
 
 function setGraphStatusText(text, truncated = false) {
   graphStatuses().forEach((status) => {
@@ -154,6 +159,7 @@ function updateLocation(push = true) {
   if (state.selectedSense?.synset) params.set("sense", state.selectedSense.synset);
   if (state.relationType) params.set("relation", state.relationType);
   params.set("depth", String(state.graphDepth));
+  params.set("flow", state.graphDirection);
   const method = push ? "pushState" : "replaceState";
   history[method]({term: state.word, sense: state.selectedSense?.synset, view: state.view, relation: state.relationType, depth: state.graphDepth}, "", `#${params}`);
 }
@@ -323,7 +329,9 @@ function renderRelationTabs() {
 }
 
 async function selectRelation(key, rerenderTabs = true) {
+  const relationChanged = state.relationType !== key;
   state.relationType = key;
+  if (relationChanged) state.graphFocusKey = null;
   if (rerenderTabs) {
     renderRelationTabs();
     updateLocation(false);
@@ -346,6 +354,7 @@ async function selectRelation(key, rerenderTabs = true) {
   state.relationTargets = targetIds.map((id) => loaded.get(id)).filter(Boolean);
   state.graphTraversal = await buildRecursiveGraph(kind, name, state.graphDepth, request);
   if (request !== state.graphRequest) return;
+  if (!state.graphTraversal?.nodes.some((node) => node.key === state.graphFocusKey)) state.graphFocusKey = null;
   renderRelations();
 }
 
@@ -362,8 +371,16 @@ function renderDepthControl(kind) {
   });
 }
 
+function renderDirectionControl() {
+  directionControls().forEach((control) => {
+    control.querySelectorAll("button").forEach((button) => {
+      button.setAttribute("aria-pressed", button.dataset.direction === state.graphDirection);
+    });
+  });
+}
+
 async function buildRecursiveGraph(kind, name, requestedDepth, request) {
-  const effectiveDepth = requestedDepth;
+  const effectiveDepth = Math.max(1, Math.min(MAX_GRAPH_DEPTH, Number(requestedDepth) || 1));
   const root = state.selectedSynset;
   const rootKey = kind === "lexical" ? state.selectedSense.id : root.id;
   const rootNode = {data: root, depth: 0, key: rootKey, senseId: state.selectedSense.id};
@@ -461,47 +478,114 @@ function renderGraphStatus(traversal) {
 function renderGraph(traversal) {
   updateGraphDialogContext();
   graphSvgs().forEach((svg) => renderGraphSvg(svg, traversal));
+  renderGraphFocus(traversal);
 }
 
 function renderGraphSvg(svg, traversal) {
-  const center = {x: 360, y: 260};
   if (!traversal) {
     svg.innerHTML = "";
+    svg.removeAttribute("style");
     return;
   }
-  const positions = new Map([[traversal.rootKey, center]]);
+  const width = 900;
   const deepest = Math.max(1, traversal.reachedDepth);
-  for (let depth = 1; depth <= deepest; depth += 1) {
-    const levelNodes = traversal.nodes.filter((node) => node.depth === depth);
-    const radiusX = 52 + (228 * depth / deepest);
-    const radiusY = 38 + (152 * depth / deepest);
-    const phase = depth % 2 ? -Math.PI / 2 : -Math.PI / 2 + Math.PI / Math.max(levelNodes.length, 1);
+  const largestLevel = Math.max(1, ...Array.from({length: deepest + 1}, (_, depth) => traversal.nodes.filter((node) => node.depth === depth).length));
+  const height = Math.max(520, 90 + largestLevel * 52);
+  const focusKey = traversal.nodes.some((node) => node.key === state.graphFocusKey) ? state.graphFocusKey : null;
+  const connectedKeys = new Set();
+  if (focusKey) traversal.edges.forEach((edge) => {
+    if (edge.source === focusKey) connectedKeys.add(edge.target);
+    if (edge.target === focusKey) connectedKeys.add(edge.source);
+  });
+  const positions = new Map();
+  const rank = (node) => node.key === focusKey ? 0 : connectedKeys.has(node.key) ? 1 : 2;
+  for (let depth = 0; depth <= deepest; depth += 1) {
+    const levelNodes = traversal.nodes.filter((node) => node.depth === depth).sort((a, b) => {
+      const rankDifference = rank(a) - rank(b);
+      if (rankDifference) return rankDifference;
+      const aLabel = a.data.lemmas[0] || a.data.id;
+      const bLabel = b.data.lemmas[0] || b.data.id;
+      return aLabel.localeCompare(bLabel);
+    });
+    const forwardX = 82 + (736 * depth / deepest);
+    const x = state.graphDirection === "reverse" ? width - forwardX : forwardX;
     levelNodes.forEach((node, index) => {
-      const angle = phase + (Math.PI * 2 * index / Math.max(levelNodes.length, 1));
-      positions.set(node.key, {x: center.x + Math.cos(angle) * radiusX, y: center.y + Math.sin(angle) * radiusY});
+      const y = levelNodes.length === 1 ? height / 2 : 60 + ((height - 120) * index / (levelNodes.length - 1));
+      positions.set(node.key, {x, y});
     });
   }
-  const edgeMarkup = traversal.edges.map((edge) => {
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.style.minWidth = `${width}px`;
+  svg.style.minHeight = `${height}px`;
+  const unrelatedEdges = [], connectedEdges = [];
+  traversal.edges.forEach((edge) => {
     const source = positions.get(edge.source), target = positions.get(edge.target);
-    return source && target ? `<line class="graph-edge" x1="${source.x}" y1="${source.y}" x2="${target.x}" y2="${target.y}"/>` : "";
-  }).join("");
-  const nodeMarkup = traversal.nodes.filter((node) => node.depth > 0).map((node) => {
+    if (!source || !target) return;
+    const active = Boolean(focusKey && (edge.source === focusKey || edge.target === focusKey));
+    const middleX = (source.x + target.x) / 2;
+    const classes = ["graph-edge", active ? "is-connected" : "", focusKey && !active ? "is-muted" : ""].filter(Boolean).join(" ");
+    const markup = `<path class="${classes}" d="M ${source.x} ${source.y} C ${middleX} ${source.y}, ${middleX} ${target.y}, ${target.x} ${target.y}" marker-end="url(#graph-arrow)"/>`;
+    (active ? connectedEdges : unrelatedEdges).push(markup);
+  });
+  const unrelatedNodes = [], connectedNodes = [], focusedNodes = [];
+  traversal.nodes.forEach((node) => {
     const point = positions.get(node.key);
-    if (!point) return "";
+    if (!point) return;
     const lemma = node.data.lemmas[0] || node.data.id;
     const labelLines = graphLabelLines(lemma, node.depth > 2 ? 12 : 18);
     const box = graphNodeBox(labelLines, node.depth);
     const labelMarkup = graphLabelMarkup(labelLines, point);
-    const senseDetail = traversal.kind === "lexical" && node.senseId ? ` · ${node.senseId}` : "";
-    return `<g class="graph-node" data-depth="${node.depth}" tabindex="0" role="button" aria-label="Open ${escapeHtml(lemma)}, depth ${node.depth}" data-target="${escapeHtml(node.data.id)}"><title>${escapeHtml(lemma)}${escapeHtml(senseDetail)} · depth ${node.depth}</title><rect x="${point.x - box.width / 2}" y="${point.y - box.height / 2}" width="${box.width}" height="${box.height}" rx="10"/><text>${labelMarkup}</text></g>`;
-  }).join("");
-  const centerLines = graphLabelLines(state.word, 18);
-  const centerBox = graphNodeBox(centerLines, 0);
-  svg.innerHTML = edgeMarkup + nodeMarkup +
-    `<g class="graph-node graph-center"><rect x="${center.x - centerBox.width / 2}" y="${center.y - centerBox.height / 2}" width="${centerBox.width}" height="${centerBox.height}" rx="12"/><text>${graphLabelMarkup(centerLines, center)}</text></g>`;
-  svg.querySelectorAll("[data-target]").forEach((node) => {
-    node.addEventListener("click", () => openRelated(node.dataset.target));
-    node.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") openRelated(node.dataset.target); });
+    const senseId = graphNodeSenseId(node, lemma);
+    const senseDetail = senseId ? ` · ${senseId}` : "";
+    const meaningDetail = node.data.definition ? ` · ${node.data.definition}` : "";
+    const focused = node.key === focusKey;
+    const connected = connectedKeys.has(node.key);
+    const classes = ["graph-node", node.depth === 0 ? "graph-center" : "", focused ? "is-focused" : "", connected ? "is-connected" : "", focusKey && !focused && !connected ? "is-muted" : ""].filter(Boolean).join(" ");
+    const markup = `<g class="${classes}" data-depth="${node.depth}" tabindex="0" role="button" aria-pressed="${focused}" aria-label="Focus ${escapeHtml(lemma)}, ${escapeHtml(posNames[node.data.pos] || node.data.pos || "word")}, depth ${node.depth}" data-node-key="${escapeHtml(node.key)}" data-target="${escapeHtml(node.data.id)}"><title>${escapeHtml(lemma)}${escapeHtml(senseDetail)}${escapeHtml(meaningDetail)} · depth ${node.depth} · click to focus</title><rect x="${point.x - box.width / 2}" y="${point.y - box.height / 2}" width="${box.width}" height="${box.height}" rx="10"/><text>${labelMarkup}</text></g>`;
+    if (focused) focusedNodes.push(markup);
+    else if (connected) connectedNodes.push(markup);
+    else unrelatedNodes.push(markup);
+  });
+  svg.innerHTML = `<defs><marker id="graph-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"/></marker></defs>` +
+    unrelatedEdges.join("") + connectedEdges.join("") + unrelatedNodes.join("") + connectedNodes.join("") + focusedNodes.join("");
+  svg.querySelectorAll("[data-node-key]").forEach((node) => {
+    node.addEventListener("click", () => focusGraphNode(node.dataset.nodeKey));
+    node.addEventListener("dblclick", () => { if (node.dataset.target !== state.selectedSynset?.id) openRelated(node.dataset.target); });
+    node.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); focusGraphNode(node.dataset.nodeKey); }
+    });
+  });
+}
+
+function focusGraphNode(key) {
+  state.graphFocusKey = state.graphFocusKey === key ? null : key;
+  renderGraph(state.graphTraversal);
+  graphSvgs().forEach((svg) => svg.closest(".graph-wrap")?.scrollTo({top: 0, behavior: "auto"}));
+}
+
+function graphNodeSenseId(node, lemma) {
+  if (node.senseId) return node.senseId;
+  const normalizedLemma = String(lemma || "").replaceAll(" ", "_").toLowerCase();
+  const matchingSense = (node.data.senses || []).find((sense) => String(sense.lemma || "").replaceAll(" ", "_").toLowerCase() === normalizedLemma);
+  return matchingSense?.id || node.data.senses?.[0]?.id || node.data.id;
+}
+
+function renderGraphFocus(traversal) {
+  const focused = traversal?.nodes.find((node) => node.key === state.graphFocusKey);
+  graphFocusPanels().forEach((panel) => {
+    if (!focused) {
+      panel.innerHTML = `<span><strong>Recorded links only:</strong> choose a word to lift and highlight its direct connections. Depth is capped at ${MAX_GRAPH_DEPTH}.</span>`;
+      return;
+    }
+    const lemma = focused.data.lemmas[0] || focused.data.id;
+    const senseId = graphNodeSenseId(focused, lemma);
+    const partOfSpeech = posNames[focused.data.pos] || focused.data.pos || "word";
+    const definition = focused.data.definition || "No definition is recorded for this graph node.";
+    const connectionCount = traversal.edges.filter((edge) => edge.source === focused.key || edge.target === focused.key).length;
+    const isCurrent = focused.key === traversal.rootKey;
+    panel.innerHTML = `<div class="graph-focus-copy"><div class="graph-focus-heading"><strong>${escapeHtml(lemma)}</strong><span>${connectionCount} direct ${connectionCount === 1 ? "connection" : "connections"}</span></div><div class="graph-focus-meta"><span>${escapeHtml(partOfSpeech)}</span><code>${escapeHtml(senseId)}</code><code>${escapeHtml(focused.data.id)}</code></div><p class="graph-focus-definition">${escapeHtml(definition)}</p></div><span class="graph-focus-actions"><button type="button" data-clear-graph-focus>Clear focus</button>${isCurrent ? "" : `<button type="button" data-open-graph-word>Open word ↗</button>`}</span>`;
+    panel.querySelector("[data-clear-graph-focus]").addEventListener("click", () => focusGraphNode(focused.key));
+    panel.querySelector("[data-open-graph-word]")?.addEventListener("click", () => openRelated(focused.data.id));
   });
 }
 
@@ -796,17 +880,21 @@ function parseHash() {
   const params = new URLSearchParams(location.hash.slice(1));
   const depth = Number(params.get("depth") || 5);
   return {
-    word: params.get("word") || "code",
+    word: params.get("word") || "entity",
     sense: params.get("sense"),
     view: params.get("view") || "sense",
     relation: params.get("relation") || "semantic:hyponym",
-    depth: Number.isInteger(depth) && depth >= 1 && depth <= 5 ? depth : 5,
+    depth: Number.isInteger(depth) && depth >= 1 && depth <= MAX_GRAPH_DEPTH ? depth : MAX_GRAPH_DEPTH,
+    flow: params.get("flow") === "reverse" ? "reverse" : "forward",
   };
 }
 
 function applyGraphLocation(target) {
   state.graphDepth = target.depth;
+  state.graphDirection = target.flow;
+  state.graphFocusKey = null;
   state.relationType = /^(semantic|lexical):[a-z0-9_-]+$/i.test(target.relation || "") ? target.relation : "semantic:hyponym";
+  renderDirectionControl();
 }
 
 function updateGraphDialogContext() {
@@ -868,11 +956,18 @@ $("about-button").addEventListener("click", () => $("about-dialog").showModal())
 $("about-close").addEventListener("click", () => $("about-dialog").close());
 depthControls().forEach((control) => control.querySelectorAll("button").forEach((button) => button.addEventListener("click", async () => {
   const depth = Number(button.dataset.depth);
-  if (!Number.isInteger(depth) || depth < 1 || depth > 5 || button.disabled) return;
+  if (!Number.isInteger(depth) || depth < 1 || depth > MAX_GRAPH_DEPTH || button.disabled) return;
   state.graphDepth = depth;
   renderDepthControl(state.relationType?.split(":")[0] || null);
   updateLocation(false);
   await selectRelation(state.relationType, false);
+})));
+directionControls().forEach((control) => control.querySelectorAll("button").forEach((button) => button.addEventListener("click", () => {
+  const direction = button.dataset.direction === "reverse" ? "reverse" : "forward";
+  state.graphDirection = direction;
+  renderDirectionControl();
+  updateLocation(false);
+  renderGraph(state.graphTraversal);
 })));
 $("graph-expand").addEventListener("click", openGraphDialog);
 $("graph-dialog-close").addEventListener("click", closeGraphDialog);

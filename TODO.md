@@ -3,7 +3,10 @@
 - [x] Place view navigation in an explicit responsive header grid and render bounded two-line graph labels.
 - [x] Replace relation graph circles with label-sized rounded information boxes.
 - [x] Add a near-full-screen relation graph explorer with synchronized relation and depth controls.
-- [x] Set the reproducible showcase entry state to code, Hyponym, and depth 5.
+- [x] Add reversible word-chain flow, focused connection highlighting, and foreground ordering.
+- [x] Display the focused word's recorded part of speech, lexical sense ID, synset ID, and definition.
+- [x] Set the reproducible showcase entry state to entity, Hyponym, depth 5, and forward flow.
+- [x] Publish a versioned code-only release without dictionaries or generated lexical data.
 - [x] Add the supplied Philippe Stuart artwork as an opening fade and linked About card.
 - [x] Add a Full word tab beside the recursive sense graph.
 - [x] Attach complete pinned CMUdict pronunciation data.

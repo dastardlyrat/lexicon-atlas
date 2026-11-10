@@ -57,7 +57,7 @@
       </div>
       <div class="relation-tabs" id="relation-tabs" aria-label="Relation types"></div>
       <div class="graph-toolbar">
-        <span class="graph-toolbar-label">Graph depth</span>
+        <span class="graph-toolbar-label">Graph depth · max 5</span>
         <div class="depth-selector" id="graph-depth" data-graph-depth role="group" aria-label="Relation recursion depth">
           <button type="button" data-depth="1" aria-pressed="true">1</button>
           <button type="button" data-depth="2" aria-pressed="false">2</button>
@@ -65,11 +65,17 @@
           <button type="button" data-depth="4" aria-pressed="false">4</button>
           <button type="button" data-depth="5" aria-pressed="false">5</button>
         </div>
+        <span class="graph-toolbar-label">Flow</span>
+        <div class="flow-selector" data-graph-direction role="group" aria-label="Word chain flow direction">
+          <button type="button" data-direction="forward" aria-pressed="true">Front → back</button>
+          <button type="button" data-direction="reverse" aria-pressed="false">Back → front</button>
+        </div>
         <span class="graph-status" id="graph-status">1 level</span>
         <button class="graph-expand" id="graph-expand" type="button" aria-haspopup="dialog" aria-controls="graph-dialog" aria-pressed="false">
           <span aria-hidden="true">⤢</span> Expand graph
         </button>
       </div>
+      <div class="graph-focus" data-graph-focus aria-live="polite"></div>
       <div class="graph-wrap">
         <svg id="relation-graph" viewBox="0 0 720 520" role="img" aria-label="Recursive graph of related senses"></svg>
       </div>
@@ -103,7 +109,7 @@
 
   <footer class="statusbar">
     <span id="dataset-status">Reading attached lexical data…</span>
-    <span class="status-actions"><span>Sources remain separate · no contextual sense is silently selected</span><a href="./resources.html">Resources &amp; licenses</a></span>
+    <span class="status-actions"><span>Sources remain separate · no contextual sense is silently selected</span><a href="./resources.html">Resources &amp; licenses</a><a href="https://github.com/alia-june/xOSG-prototype/tree/main/nlp-development-suite" target="_blank" rel="noopener noreferrer">NLP suite prototype ↗</a></span>
   </footer>
 
   <dialog id="about-dialog">
@@ -117,6 +123,7 @@
         <p>The Sense graph displays the complete locally verified Open English WordNet 2025 release. The Full word view adds attached CMUdict, IPA, UniMorph, Wiktionary, and historical GCIDE records when present. Synthesis creates a ranked proposal from those records using transparent heuristics.</p>
         <p>Source records stay separate. A shared spelling does not prove that definitions, pronunciations, forms, or derivations refer to the same sense.</p>
         <p>Definitions and relations are lexical evidence. They do not resolve what a word means in a sentence and do not create Control Draft authority, rules, or axioms.</p>
+        <p><strong>Related prototype:</strong> the anonymized, code-only NLP Development Suite is published in <a class="dialog-link" href="https://github.com/alia-june/xOSG-prototype/tree/main/nlp-development-suite" target="_blank" rel="noopener noreferrer">alia-june/xOSG-prototype ↗</a>. Both repositories exclude dictionary payloads; locally installed lexical data remains separate.</p>
         <p><a class="dialog-link" href="./resources.html">View every active resource and its recorded license →</a></p>
         <div class="about-metrics" id="about-metrics"></div>
       </div>
@@ -135,7 +142,7 @@
       </header>
       <div class="relation-tabs graph-dialog-tabs" id="graph-dialog-relation-tabs" aria-label="Expanded relation types"></div>
       <div class="graph-toolbar graph-dialog-toolbar">
-        <span class="graph-toolbar-label">Graph depth</span>
+        <span class="graph-toolbar-label">Graph depth · max 5</span>
         <div class="depth-selector" id="graph-dialog-depth" data-graph-depth role="group" aria-label="Expanded graph recursion depth">
           <button type="button" data-depth="1" aria-pressed="true">1</button>
           <button type="button" data-depth="2" aria-pressed="false">2</button>
@@ -143,8 +150,14 @@
           <button type="button" data-depth="4" aria-pressed="false">4</button>
           <button type="button" data-depth="5" aria-pressed="false">5</button>
         </div>
+        <span class="graph-toolbar-label">Flow</span>
+        <div class="flow-selector" data-graph-direction role="group" aria-label="Expanded word chain flow direction">
+          <button type="button" data-direction="forward" aria-pressed="true">Front → back</button>
+          <button type="button" data-direction="reverse" aria-pressed="false">Back → front</button>
+        </div>
         <span class="graph-status" id="graph-dialog-status">1 level</span>
       </div>
+      <div class="graph-focus graph-dialog-focus" data-graph-focus aria-live="polite"></div>
       <div class="graph-wrap graph-wrap-expanded">
         <svg id="relation-graph-expanded" viewBox="0 0 720 520" role="img" aria-label="Expanded recursive graph of related senses"></svg>
       </div>

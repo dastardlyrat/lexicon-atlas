@@ -1,7 +1,8 @@
 {
   "schema": "lexicon-atlas-code-publication/1",
   "status": "generated-and-validated",
-  "publication_date": "2026-11-07",
+  "publication_date": "2026-11-10",
+  "release": "v0.1.0",
   "license": {
     "spdx": "MIT",
     "copyright": "Copyright (c) 2026 dastardlyrat",
@@ -10,7 +11,7 @@
   },
   "source": {
     "kind": "Lexicon Atlas Sites source snapshot",
-    "commit": "363a2a002e2d4cb71fdba1b2f8a2b223866a1292",
+    "commit": "c70b5b33c2adb7ea5f792f22845d4a515ebb92bc",
     "live_url": "https://lexicon-atlas-oewn.dastardly-rat.chatgpt.site/"
   },
   "scope": {

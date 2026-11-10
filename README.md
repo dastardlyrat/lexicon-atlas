@@ -18,6 +18,10 @@ This is a **code-only repository**. It contains the interface, data builders, im
 
 The omission is deliberate: each lexical source has its own provenance, version, and redistribution terms. Obtain permitted source data yourself, place it under a machine-local data root, and build `dist/data/` locally. See [DATA_INSTALLATION.md](DATA_INSTALLATION.md).
 
+## Download
+
+Use the [latest code-only release](https://github.com/dastardlyrat/lexicon-atlas/releases/latest) for a versioned ZIP. Release archives contain the application and local builders, but no dictionaries, generated lexical shards, databases, downloaded corpora, or automatic source downloader. Data installation remains a separate user-controlled step.
+
 ## What is included
 
 | Area | Purpose |
@@ -66,7 +70,7 @@ static browser interface
           +--> optional Electron loopback shell
 ```
 
-The browser reads deterministic hash-sharded JSON assets. The relation graph follows one selected relation for one to five bounded levels. The synthesis view ranks attached records with explicit source weights and lexical overlap; it remains a proposal rather than authority.
+The browser reads deterministic hash-sharded JSON assets. The relation graph follows one selected relation for one to five bounded levels. Its word-chain layout can flow front-to-back or back-to-front. Selecting a graph word raises and highlights its recorded direct connections and displays its part of speech, lexical sense ID, synset ID, and source definition. The default `entity` hyponym view exercises the full five-level bounded presentation. The synthesis view ranks attached records with explicit source weights and lexical overlap; it remains a proposal rather than authority.
 
 ## Start locally
 

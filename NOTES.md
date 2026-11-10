@@ -6,7 +6,7 @@ On 2026-11-04, the view navigation was moved into an explicit responsive header 
 
 Headless Edge renders passed at 1600 by 1000, 1000 by 900, and 700 by 900 pixels. JavaScript syntax and the complete `lexicon-atlas-data/4` structural validation also passed. These checks establish the tested layout and syntax only; they do not change lexical authority or source semantics.
 
-Relation graph nodes now use rounded rectangular boxes sized from their one-line or two-line label content. This provides a stable area for later metadata fields and keeps labels easier to scan than the earlier circles. The graph radii retain additional viewport padding for the wider shapes.
+Relation graph nodes now use rounded rectangular boxes sized from their one-line or two-line label content. The current chain layout arranges relation depth in columns and can reverse between front-to-back and back-to-front reading. Selecting a node moves it and its direct neighbors to the visual foreground, dims unrelated branches, and shows the recorded part of speech, lexical sense ID, synset ID, and source definition. Traversal remains capped at five levels, 20 new nodes per level, and 100 related nodes overall.
 
 ## Source inventory
 
@@ -58,7 +58,9 @@ The public `resources.html` ledger lists the six lexical resources active in the
 
 The relation graph can open in a near-full-screen modal explorer. The expanded view reuses the active traversal, preserves clickable relation boxes, mirrors the selected relation and recursion depth, and updates both the embedded and expanded graphs from the same state. It does not increase the existing five-level or 100-node traversal bounds.
 
-The empty-hash showcase state opens `code` with the semantic Hyponym relation at depth 5. Relation and depth are encoded in the URL so this presentation can be reproduced and shared; explicit URL values and later visitor choices remain authoritative over the default.
+The empty-hash showcase state opens `entity` with the semantic Hyponym relation at depth 5 and forward flow. Relation, depth, and flow are encoded in the URL so this presentation can be reproduced and shared; explicit URL values and later visitor choices remain authoritative over the default.
+
+The `v0.1.0` public release is a generated code-only publication based on live Site source commit `c70b5b33c2adb7ea5f792f22845d4a515ebb92bc`. The release deliberately excludes dictionaries, generated shards, databases, archives, dependency caches, and automatic downloaders. Passing the repository guard establishes that packaging boundary only; it does not validate third-party data rights or live behavior after a user installs separate data.
 
 The user-supplied 1284×1698 JPEG is preserved at `dist/assets/philippe-stuart-art.jpg` with SHA-256 `5b52740e4cc581ada0857cbc4002bb7efd2254f713fcf0773a1ef9af77f3c43f`. It appears in a non-interactive opening splash that holds for four seconds before fading, and in a linked About card for `https://www.facebook.com/philippe.stuart/`. No separate artwork license was supplied, so the resource ledger records the usage and unknown license state without inferring ownership or permission beyond the user's requested inclusion.
 
