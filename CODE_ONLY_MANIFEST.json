@@ -2,7 +2,7 @@
   "schema": "lexicon-atlas-code-publication/1",
   "status": "generated-and-validated",
   "publication_date": "2026-11-10",
-  "release": "v0.1.0",
+  "release": "v0.1.1",
   "license": {
     "spdx": "MIT",
     "copyright": "Copyright (c) 2026 dastardlyrat",
