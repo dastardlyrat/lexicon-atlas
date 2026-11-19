@@ -10,7 +10,7 @@ Lexicon Atlas is part of our developing work on **natural language processing (N
 
 The `main` branch is the current code-only reference build. It includes the explicit deterministic `finalize_data.py` stage, an isolated synthetic validation profile, rollback and path-confinement checks, and a loopback browser-data smoke test. The matching implementation is mirrored in the [identity-neutral xOSG NLP prototype](https://github.com/alia-june/xOSG-prototype/tree/main/nlp-development-suite/projects/lexicon-atlas).
 
-The latest tagged standalone release, `v0.1.1`, predates this finalization repair. Use `main` when reviewing or testing the current build contract; use the tagged release only when reproducing that earlier code-only snapshot. No tagged release contains dictionaries or generated lexical shards.
+The current packaged reference build is `v0.1.4`. It adds deterministic data finalization, the isolated synthetic validation profile, rollback and stale-output guards, loopback data-path coverage, and the corrected build sequence. The earlier `v0.1.3` tag was published without a downloadable asset; use `v0.1.4` for the complete code-only download.
 
 The synthetic suite establishes the tested staging-to-gzip, structural-validation, and HTTP data-path contract. It does not establish external-corpus correctness, semantic authority, licensing permission, live-site equivalence, or visual-browser acceptance.
 
@@ -28,7 +28,17 @@ The omission is deliberate: each lexical source has its own provenance, version,
 
 ## Download
 
-Use the [latest code-only release](https://github.com/dastardlyrat/lexicon-atlas/releases/latest) for a versioned ZIP. Release archives contain the application and local builders, but no dictionaries, generated lexical shards, databases, downloaded corpora, or automatic source downloader. Data installation remains a separate user-controlled step.
+Download [Lexicon Atlas v0.1.4 — code only](https://github.com/dastardlyrat/lexicon-atlas/releases/download/v0.1.4/lexicon-atlas-v0.1.4-code-only.zip). The release ZIP contains the browser application, deterministic finalizer, validator, synthetic tests, local builders, adapters, desktop scaffold, and documentation.
+
+It contains no dictionaries, generated lexical shards, databases, downloaded corpora, dependency caches, or automatic source downloader. Data installation remains a separate user-controlled step. The release page records the archive size and SHA-256 digest.
+
+### Changes in v0.1.4
+
+- Added an explicit deterministic and rollback-capable JSON-to-gzip finalization stage.
+- Added an explicitly licensed synthetic fixture profile and seven corpus-free regression tests.
+- Added validation for exact browser paths, complete shard families, stale outputs, malformed gzip, explicit absence, and relation resolution.
+- Corrected the documented build order to finalize before structural validation or browser use.
+- Preserved the code-only and source-authority boundaries; no lexical dataset is bundled.
 
 ## What is included
 

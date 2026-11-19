@@ -1,8 +1,8 @@
 {
   "schema": "lexicon-atlas-code-publication/1",
   "status": "generated-and-validated",
-  "publication_date": "2026-11-10",
-  "release": "v0.1.1",
+  "publication_date": "2026-11-19",
+  "release": "v0.1.4",
   "license": {
     "spdx": "MIT",
     "copyright": "Copyright (c) 2026 dastardlyrat",
@@ -10,8 +10,9 @@
     "excludes": "external dictionaries, lexical databases, generated third-party records, and dependencies"
   },
   "source": {
-    "kind": "Lexicon Atlas Sites source snapshot",
-    "commit": "c70b5b33c2adb7ea5f792f22845d4a515ebb92bc",
+    "kind": "Lexicon Atlas repository reference build",
+    "base_commit": "70e1116cd9ea77abcf28a5a295868a99c054059b",
+    "release_tag": "v0.1.4",
     "live_url": "https://lexicon-atlas-oewn.dastardly-rat.chatgpt.site/"
   },
   "scope": {
@@ -35,8 +36,10 @@
   },
   "validation": {
     "guard": "python -B verify_code_only.py",
+    "synthetic_tests": "python -B -m unittest discover -s tests -v",
     "javascript_syntax": "passed",
     "python_syntax": "passed",
+    "synthetic_tests_passed": 7,
     "external_data_tracked": false
   }
 }
