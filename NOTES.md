@@ -1,5 +1,13 @@
 # Lexicon Atlas notes
 
+## Deterministic data finalization
+
+On 2026-11-19, the repository gained an explicit finalization boundary between source parsing and browser delivery. `build_data.py` and the GCIDE adapter continue to emit source-separated uncompressed staging JSON. `finalize_data.py` now parses those values, serializes canonical UTF-8 JSON, applies gzip level 9 with `mtime=0`, and atomically replaces only the matching `.json.gz` browser targets. Uncompressed staging values remain present, and the finalizer does not download, normalize, or merge lexical records.
+
+The finalizer confines writes to the exact project-shaped `dist/data` directory, rejects undeclared or incomplete families, stages every output before replacement, rolls back a tested replacement failure, and writes a deterministic artifact inventory with relative paths, byte counts, and SHA-256 values. Production word, lexical, GCIDE, and locally installed Wiktionary hash families remain subject to the 256-shard contract.
+
+Seven corpus-free tests use two invented spellings, visibly colliding senses, two synthetic provider labels, semantic and lexical relations, pronunciation and morphology records, and one absent spelling. The suite demonstrated repeatable gzip bytes, preflight preservation, commit rollback, path refusal, stale-output detection, incomplete-family refusal, synthetic validator acceptance, exact loopback HTTP paths, relation resolution, explicit absence, and corrupt-gzip rejection. This establishes only the tested synthetic transport and structural contract. Full external-corpus validation, browser visual behavior, source correctness, licensing permission, and live deployment remain outside this result.
+
 ## Interface layout verification
 
 On 2026-11-04, the view navigation was moved into an explicit responsive header grid so it cannot overlap the brand and provenance subtitle. The relation graph now uses bounded two-line SVG labels, dynamically sized nodes, and additional edge padding instead of silently dropping the final character of a long single-word label.

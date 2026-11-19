@@ -1,5 +1,9 @@
 # Lexicon Atlas todo
 
+- [x] Add an explicit deterministic and atomic JSON-to-gzip finalization stage.
+- [x] Add a corpus-free synthetic finalizer, validator, and loopback data-path regression suite.
+- [x] Align the documented build order with the browser and validator compression contract.
+- [ ] Perform the separately scoped P1 validator-hardening review for referential integrity and source-hash recomputation.
 - [x] Place view navigation in an explicit responsive header grid and render bounded two-line graph labels.
 - [x] Replace relation graph circles with label-sized rounded information boxes.
 - [x] Add a near-full-screen relation graph explorer with synchronized relation and depth controls.

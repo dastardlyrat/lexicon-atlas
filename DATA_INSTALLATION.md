@@ -42,12 +42,25 @@ From the repository root:
 
 ```powershell
 python build_data.py
-python lexical_pipeline.py import-wiktionary
-python lexical_pipeline.py import-gcide
+python lexical_pipeline.py import-wiktionary  # optional local supplement
+python lexical_pipeline.py import-gcide       # optional local supplement
+python finalize_data.py
 python validate_build.py
 ```
 
-`build_data.py` replaces `dist/data/`; therefore run supplemental imports after the base build. All generated output remains ignored by Git.
+`build_data.py` replaces `dist/data/`; therefore run supplemental imports after the base build. `finalize_data.py` is the required final step before validation or browser use. It parses the staged JSON, writes deterministic gzip assets with zeroed gzip time metadata, atomically replaces only the corresponding browser files, and records relative paths, sizes, and SHA-256 values in `dist/data/artifact-inventory.json`.
+
+The finalizer does not download data, merge source records, remove staging JSON, or operate outside this checkout's exact `dist/data/` directory. Production hash-sharded families must contain all 256 shards. A failed preflight leaves existing finalized files untouched, and a replacement failure attempts a complete rollback.
+
+Wiktionary and GCIDE imports are optional. Omit an import when its permitted source is not installed; the generated manifest must accurately retain that source as absent or live fallback. All staged and finalized output remains ignored by Git.
+
+The ordinary regression suite uses invented synthetic records and no external corpus:
+
+```powershell
+python -B -m unittest discover -s tests -v
+```
+
+The synthetic validation profile is test-only. Normal local builds continue to use the validator's default production profile.
 
 ## StarDict and ODict
 

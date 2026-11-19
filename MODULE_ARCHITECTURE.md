@@ -10,6 +10,7 @@ Each module should do one job, expose a small data contract, and keep source evi
 |---|---|---|---|
 | Data build | `build_data.py` | Build OEWN and attached browser shards | Existing standalone module |
 | Dictionary adapters | `lexical_pipeline.py` | Download, import, normalize, and export dictionary formats | Existing standalone module |
+| Data finalization | `finalize_data.py` | Validate staged JSON and atomically produce deterministic gzip browser assets | Existing standalone module |
 | ODict bridge | `odict_bridge.cjs` | Compile and query ODXML through the official binding | Existing standalone module |
 | Desktop shell | `desktop/main.cjs` | Loopback server and restricted Electron window | Scaffolded |
 | Synthesis engine | `dist/modules/synthesis-engine.js` | Pure candidate collection, ranking, context matching, and cue extraction | First browser extraction |
@@ -42,6 +43,8 @@ frontend/
 
 The reusable Python package mirrors these boundaries under `Lexicon Core/src/lexicon_core/`: `registry`, `normalize`, `collisions`, `morphology`, `relations`, `intent`, `synthesis`, and `pipeline`.
 
+The finalization boundary is deliberately narrower than parsing. Builders and adapters emit source-separated JSON staging values. `finalize_data.py` preserves those values while applying the browser transport contract: canonical UTF-8 JSON, deterministic gzip metadata, path confinement, atomic file replacement, and an artifact inventory. It does not acquire sources, normalize lexical meaning, or merge provider records.
+
 Task-specific adapters live under `Lexicon Core/src/lexicon_core/tasks/`:
 
 - dictionary lookup
@@ -72,3 +75,5 @@ External consumer profiles live under `Lexicon Core/src/lexicon_core/adapters/`.
 ## Current verification
 
 The first extraction was tested through the local browser build. The Synthesis pane still loads `bank`, reranks a deposit context to the financial noun sense, and reports zero page errors.
+
+The finalization boundary has a separate corpus-free regression suite. Invented records exercise deterministic output, rollback, destination confinement, incomplete-family rejection, synthetic structural validation, and loopback HTTP retrieval. These checks establish the tested fixture contract only; they do not reproduce the historical full-corpus or visual-browser statements above.
