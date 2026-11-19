@@ -6,6 +6,14 @@ Lexicon Atlas is a source-aware graphical explorer for words, senses, definition
 
 Lexicon Atlas is part of our developing work on **natural language processing (NLP)**. See the [NLP Development Suite](https://github.com/alia-june/xOSG-prototype/tree/main/nlp-development-suite) in the xOSG Prototype repository for the broader technology. An upcoming project will grow a **dictionary from a seed drawn from classical sources**, keeping each source’s provenance visible as the dictionary develops.
 
+## Current reference build
+
+The `main` branch is the current code-only reference build. It includes the explicit deterministic `finalize_data.py` stage, an isolated synthetic validation profile, rollback and path-confinement checks, and a loopback browser-data smoke test. The matching implementation is mirrored in the [identity-neutral xOSG NLP prototype](https://github.com/alia-june/xOSG-prototype/tree/main/nlp-development-suite/projects/lexicon-atlas).
+
+The latest tagged standalone release, `v0.1.1`, predates this finalization repair. Use `main` when reviewing or testing the current build contract; use the tagged release only when reproducing that earlier code-only snapshot. No tagged release contains dictionaries or generated lexical shards.
+
+The synthetic suite establishes the tested staging-to-gzip, structural-validation, and HTTP data-path contract. It does not establish external-corpus correctness, semantic authority, licensing permission, live-site equivalence, or visual-browser acceptance.
+
 ![Illustration of a figure beside a circular geometric motif](assets/phillipe-stuart-artwork.jpg)
 
 *Artwork by phillipe stuart.*
