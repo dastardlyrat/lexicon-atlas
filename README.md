@@ -138,3 +138,11 @@ Passing that suite establishes only the tested synthetic data-path contract. It 
 The original code, documentation, and published project assets in this repository are licensed under the [MIT License](LICENSE), copyright 2026 `dastardlyrat`.
 
 The MIT License does **not** relicense external dictionaries, lexical databases, generated records derived from them, or third-party dependencies. Those materials are excluded from this repository and retain their own licenses and attribution requirements. See [`dist/resources.html`](dist/resources.html) for the source-by-source ledger.
+
+## Project directory and related work
+
+[Browse the dastardlyrat project directory](https://dastardlyrat.github.io/).
+
+- [identity-atomic-cataloger](https://github.com/dastardlyrat/identity-atomic-cataloger)
+- [modular-recursive-plugin-pipeline](https://github.com/dastardlyrat/modular-recursive-plugin-pipeline)
+- [this-repository-machine-interface](https://github.com/dastardlyrat/this-repository-machine-interface)
